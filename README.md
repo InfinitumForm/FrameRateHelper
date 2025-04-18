@@ -22,11 +22,13 @@
 **jsDelivr:**
 ```html
 <script src="https://cdn.jsdelivr.net/gh/InfinitumForm/FrameRateHelper@v1.0.1/dist/FrameRateHelper.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/InfinitumForm/FrameRateHelper@v1.0.1/dist/FrameRateHelper.min.js"></script>
 ```
 
 **unpkg:**
 ```html
 <script src="https://unpkg.com/framerate-helper@1.0.1/dist/FrameRateHelper.js"></script>
+<script src="https://unpkg.com/framerate-helper@1.0.1/dist/FrameRateHelper.min.js"></script>
 ```
 
 This exposes `window.FrameRateHelper` globally.
