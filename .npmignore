@@ -1,0 +1,21 @@
+# Ignore development and source files from being published to NPM
+
+# Node dependencies
+node_modules/
+
+# Build tools and config
+rollup.config.js
+*.log
+
+# Development files
+src/
+test/
+.DS_Store
+*.map
+
+# Git and version control
+.git/
+.gitignore
+
+# Lock files (optional, if not required)
+package-lock.json
