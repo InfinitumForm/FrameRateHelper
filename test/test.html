@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FrameRateHelper Test Page (Vanilla JS)</title>
+  <script src="../dist/FrameRateHelper.min.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2rem;
+      background-color: #f9f9f9;
+      text-align: center;
+    }
+    .box, .fade-box {
+      margin: 1rem auto;
+      border-radius: 8px;
+    }
+    .box {
+      width: 150px;
+      height: 150px;
+      background: #4e9af1;
+      display: none;
+    }
+    .fade-box {
+      width: 100px;
+      height: 100px;
+      background: #f18e4e;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+    button {
+      padding: 0.6rem 1.2rem;
+      margin: 0.5rem;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>FrameRateHelper Test (No jQuery)</h1>
+  <p>This page demonstrates how to use <strong>FrameRateHelper</strong> with native JavaScript animations.</p>
+
+  <button id="toggleBtn">Toggle .box</button>
+  <button id="fadeBtn">Fade In/Out .fade-box</button>
+
+  <div class="box"></div>
+  <div class="fade-box"></div>
+
+  <script>
+    const fps = new FrameRateHelper();
+
+    fps.onReady((hz) => {
+      console.log('Detected refresh rate:', hz.toFixed(2), 'Hz');
+      const duration = fps.getDuration(400);
+
+      const box = document.querySelector('.box');
+      const fadeBox = document.querySelector('.fade-box');
+      const toggleBtn = document.getElementById('toggleBtn');
+      const fadeBtn = document.getElementById('fadeBtn');
+
+      toggleBtn.addEventListener('click', () => {
+        if (box.style.display === 'none' || box.style.display === '') {
+          box.style.display = 'block';
+          box.style.transition = `opacity ${duration}ms ease`;
+          box.style.opacity = 0;
+          requestAnimationFrame(() => {
+            box.style.opacity = 1;
+          });
+        } else {
+          box.style.transition = `opacity ${duration}ms ease`;
+          box.style.opacity = 0;
+          setTimeout(() => {
+            box.style.display = 'none';
+          }, duration);
+        }
+      });
+
+      let fadeVisible = false;
+      fadeBtn.addEventListener('click', () => {
+        fadeBox.style.transition = `opacity ${duration}ms ease`;
+        fadeBox.style.opacity = fadeVisible ? 0 : 1;
+        fadeVisible = !fadeVisible;
+      });
+    });
+  </script>
+
+</body>
+</html>
