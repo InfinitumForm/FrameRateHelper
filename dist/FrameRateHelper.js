@@ -1,0 +1,8 @@
+/**
+ * FrameRateHelper
+ *
+ * Detects the screen refresh rate and provides a safe, clamped frame duration
+ * for use in animations or transitions. Uses requestAnimationFrame if available,
+ * with requestIdleCallback fallback for optimal idle accuracy, and setTimeout as last resort.
+ */
+class FrameRateHelper{constructor(){this.estimatedFrameDuration=1e3/60,this.ready=!1,this._callbacks=[],this._init()}_init(){"function"==typeof window.requestAnimationFrame?this._measureWithRAF():"function"==typeof window.requestIdleCallback?this._measureWithIdleCallback():this._measureWithTimeout()}_measureWithRAF(){let e=[],t=performance.now(),i=a=>{let s=a-t;if(e.push(s),e.length>60){this._finalize(e);return}t=a,requestAnimationFrame(i)};requestAnimationFrame(i)}_measureWithIdleCallback(){let e=[],t=0,i=a=>{let s=performance.now();if(e.push(s),++t>60){let l=e.slice(1).map((t,i)=>t-e[i]);this._finalize(l);return}requestIdleCallback(i)};requestIdleCallback(i)}_measureWithTimeout(){let e=[],t=performance.now(),i=()=>{let a=performance.now(),s=a-t;if(e.push(s),e.length>60){this._finalize(e);return}t=a,setTimeout(i,16)};setTimeout(i,16)}_finalize(e){let t=e.reduce((e,t)=>e+t,0)/e.length,i=Math.min(Math.max(t,10),20);this.estimatedFrameDuration=i,this.ready=!0;let a=1e3/i;this._callbacks.forEach(e=>e(a)),this._callbacks=[]}getDuration(e=0){return this.estimatedFrameDuration+e}onReady(e){this.ready?e(1e3/this.estimatedFrameDuration):this._callbacks.push(e)}}
