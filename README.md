@@ -18,7 +18,7 @@
 Use directly in HTML via jsDelivr:
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/yourusername/FrameRateHelper@1.0.0/dist/FrameRateHelper.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/InfinitumForm/FrameRateHelper@v1.0.0/dist/FrameRateHelper.js"></script>
 ```
 
 Or via unpkg:
