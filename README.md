@@ -124,6 +124,28 @@ Calculates duration based on number of frames.
 
 ## 💡 Real-World Use Cases
 
+### jQuery Integration Examples
+
+You can seamlessly use `FrameRateHelper` (for example) with jQuery animation methods to ensure frame-synced transitions:
+
+```js
+const fps = new FrameRateHelper();
+
+fps.onReady(() => {
+  const duration = fps.getDuration(400); // add a 400ms offset if desired
+
+  // Smoothly toggle element visibility with frame-accurate duration
+  $('.my-element').slideToggle(duration);
+
+  // Show/hide with consistent frame-based speed
+  $('.other-element').show(duration);
+  $('.another-one').hide(duration);
+});
+```
+
+This is especially useful when animations feel "choppy" on devices with non-standard refresh rates (e.g. 120Hz, 144Hz), ensuring consistent experience across screens.
+
+
 - Precision animations in sliders, carousels, or onboarding steps
 - Smooth frame-based motion control in games or interactive UIs
 - Avoiding stutters in custom scroll or fade effects
