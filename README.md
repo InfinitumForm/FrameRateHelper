@@ -21,13 +21,19 @@
 
 **jsDelivr:**
 ```html
+<!-- Development version (readable, unminified, includes source map) -->
 <script src="https://cdn.jsdelivr.net/gh/InfinitumForm/FrameRateHelper@v1.0.1/dist/FrameRateHelper.js"></script>
+
+<!-- Production version (minified, optimized for speed) -->
 <script src="https://cdn.jsdelivr.net/gh/InfinitumForm/FrameRateHelper@v1.0.1/dist/FrameRateHelper.min.js"></script>
 ```
 
 **unpkg:**
 ```html
+<!-- Development version (readable, unminified, includes source map) -->
 <script src="https://unpkg.com/framerate-helper@1.0.1/dist/FrameRateHelper.js"></script>
+
+<!-- Production version (minified, optimized for speed) -->
 <script src="https://unpkg.com/framerate-helper@1.0.1/dist/FrameRateHelper.min.js"></script>
 ```
 
