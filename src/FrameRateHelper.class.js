@@ -1,9 +1,7 @@
-/**
- * FrameRateHelper
- *
- * Detects the screen refresh rate and provides a safe, clamped frame duration
- * for use in animations or transitions. Uses requestAnimationFrame if available,
- * with requestIdleCallback fallback for optimal idle accuracy, and setTimeout as last resort.
+/*!
+ * FrameRateHelper.js v1.0.1
+ * Author: Ivijan-Stefan Stipić
+ * MIT Licensed | https://github.com/InfinitumForm/FrameRateHelper
  */
 class FrameRateHelper {
 	constructor() {
@@ -131,6 +129,36 @@ class FrameRateHelper {
 	getDuration(offset = 0) {
 		return this.estimatedFrameDuration + offset;
 	}
+	
+	/**
+	 * Calculates total duration based on the number of animation frames.
+	 *
+	 * @param {number} frames - Number of animation frames to simulate.
+	 * @param {object} [options] - Optional configuration.
+	 * @param {number} [options.min] - Minimum clamped duration (in ms).
+	 * @param {number} [options.max] - Maximum clamped duration (in ms).
+	 * @param {boolean} [options.rounded=false] - Whether to round the result to the nearest integer.
+	 * @returns {number} Duration in milliseconds (clamped and optionally rounded).
+	 */
+	getDurationForFrames(frames, options = {}) {
+		let duration = frames * this.estimatedFrameDuration;
+
+		// Apply clamping if provided
+		if (typeof options.min === 'number' && duration < options.min) {
+			duration = options.min;
+		}
+		if (typeof options.max === 'number' && duration > options.max) {
+			duration = options.max;
+		}
+
+		// Round the result if requested
+		if (options.rounded === true) {
+			duration = Math.round(duration);
+		}
+
+		return duration;
+	}
+
 
 	/**
 	 * Registers a callback to be executed when frame duration is ready.
@@ -146,5 +174,5 @@ class FrameRateHelper {
 	}
 }
 
-// Optional export for ES Modules
-// export default FrameRateHelper;
+// Expose to global scope (for browser usage via IIFE)
+window.FrameRateHelper = FrameRateHelper;

@@ -1,12 +1,12 @@
 {
     "name": "framerate-helper",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "A lightweight utility for estimating screen refresh rate and calculating frame-safe animation durations.",
     "main": "dist/FrameRateHelper.js",
     "type": "module",
     "scripts": {
-      "build": "echo 'No build step yet'",
-      "test": "echo 'No tests defined'"
+      "build": "rollup -c",
+	  "build:watch": "rollup -c --watch"
     },
     "repository": {
       "type": "git",

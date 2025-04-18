@@ -1,0 +1,5 @@
+node_modules/
+.DS_Store
+*.log
+rollup.config.js
+package-lock.json
