@@ -1,5 +1,5 @@
 /*!
- * FrameRateHelper.js v1.0.1
+ * FrameRateHelper.js v1.0.2
  * Author: Ivijan-Stefan Stipić
  * MIT Licensed | https://github.com/InfinitumForm/FrameRateHelper
  */
