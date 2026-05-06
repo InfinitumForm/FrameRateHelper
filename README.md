@@ -2,6 +2,7 @@
 
 **FrameRateHelper** is a lightweight, zero-dependency JavaScript utility that calculates the user's display refresh rate and provides a stable, clamped frame duration. It is ideal for synchronizing animations with screen refresh rates to produce smooth, consistent visual experiences.
 
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/V7V11XGEKH)
 ---
 
 ## 🚀 Features
@@ -164,6 +165,7 @@ MIT License — free for personal and commercial use.
 Developed by [**INFINITUM FORM®**](https://infinitumform.com)  
 Author: [Ivijan-Stefan Stipić](https://www.linkedin.com/in/ivijanstefanstipic/)  
 © 2025 Ivijan-Stefan Stipić. All rights reserved.
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/V7V11XGEKH)
 
 ---
 
