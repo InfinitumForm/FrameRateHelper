@@ -165,6 +165,7 @@ MIT License — free for personal and commercial use.
 Developed by [**INFINITUM FORM®**](https://infinitumform.com)  
 Author: [Ivijan-Stefan Stipić](https://www.linkedin.com/in/ivijanstefanstipic/)  
 © 2025 Ivijan-Stefan Stipić. All rights reserved.
+
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/V7V11XGEKH)
 
 ---
