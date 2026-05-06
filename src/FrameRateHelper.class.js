@@ -109,7 +109,7 @@ class FrameRateHelper {
 		const avg = frameTimes.reduce((a, b) => a + b, 0) / frameTimes.length;
 
 		// Clamp average to safe range: between 10ms (100Hz) and 20ms (50Hz)
-		const clamped = Math.min(Math.max(avg, 10), 20);
+		const clamped = Math.min(Math.max(avg, 4), 33.34);
 		this.estimatedFrameDuration = clamped;
 
 		this.ready = true;
