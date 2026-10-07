@@ -1,5 +1,5 @@
 /*!
- * FrameRateHelper.js v1.0.1
+ * FrameRateHelper.js v1.0.3
  * Author: Ivijan-Stefan Stipić
  * MIT Licensed | https://github.com/InfinitumForm/FrameRateHelper
  */
@@ -17,7 +17,7 @@ class FrameRateHelper {
 		this._durationsList = {};
 
 		this._cache = options.cache === true;
-		this._storageKey = 'FrameRateHelper.frameDuration';
+		this._storageKey = 'FrameRateHelper.frameDuration.v1.0.3';
 
 		this._init();
 	}
@@ -27,18 +27,41 @@ class FrameRateHelper {
 	 */
 	_init() {
 		if (this._cache && typeof localStorage !== 'undefined') {
-			const stored = parseFloat(localStorage.getItem(this._storageKey));
-			if (!isNaN(stored) && stored >= (1000 / 480) && stored <= (1000 / 50)) {
-				this.estimatedFrameDuration = stored;
-				this.ready = true;
-				const refreshRate = 1000 / stored;
-				this._callbacks.forEach(cb => cb(refreshRate));
-				this._callbacks = [];
-				return;
+			try {
+				const stored = parseFloat(
+					localStorage.getItem(this._storageKey)
+				);
+
+				if (
+					Number.isFinite(stored) &&
+					stored >= (1000 / 480) &&
+					stored <= (1000 / 50)
+				) {
+					this.estimatedFrameDuration = stored;
+					this.ready = true;
+
+					const refreshRate = 1000 / stored;
+
+					const callbacks = this._callbacks;
+					this._callbacks = [];
+
+					callbacks.forEach(callback => {
+						try {
+							callback(refreshRate);
+						} catch (error) {
+							setTimeout(() => {
+								throw error;
+							}, 0);
+						}
+					});
+
+					return;
+				}
+			} catch (error) {
+				// Ignore storage errors and continue with live measurement.
 			}
 		}
-		
-		// Fallback to measurement
+
 		if (typeof window.requestAnimationFrame === 'function') {
 			this._measureWithRAF();
 		} else if (typeof window.requestIdleCallback === 'function') {
@@ -54,33 +77,35 @@ class FrameRateHelper {
 	 */
 	_measureWithRAF() {
 		const frameTimes = [];
-		let lastTime = performance.now();
+		let lastTime = null;
 
 		const check = (timestamp) => {
-			const delta = timestamp - lastTime;
-			frameTimes.push(delta);
+			if (lastTime !== null) {
+				frameTimes.push(timestamp - lastTime);
+			}
 
-			if (frameTimes.length > 60) {
+			lastTime = timestamp;
+
+			if (frameTimes.length >= 60) {
 				this._finalize(frameTimes);
 				return;
 			}
 
-			lastTime = timestamp;
-			requestAnimationFrame(check);
+			window.requestAnimationFrame(check);
 		};
 
-		requestAnimationFrame(check);
+		window.requestAnimationFrame(check);
 	}
 
 	/**
-	 * Fallback: measure refresh rate with requestIdleCallback.
-	 * Useful in inactive tabs or low-power devices.
+	 * Fallback: estimates a usable frame duration using requestIdleCallback.
+	 * This does not represent the actual display refresh rate.
 	 */
 	_measureWithIdleCallback() {
 		const samples = [];
 		let count = 0;
 
-		const collect = (deadline) => {
+		const collect = () => {
 			const now = performance.now();
 			samples.push(now);
 			count++;
@@ -98,8 +123,8 @@ class FrameRateHelper {
 	}
 
 	/**
-	 * Fallback: use setTimeout to estimate frame intervals.
-	 * Least accurate but ensures basic support.
+	 * Fallback: estimates a usable frame duration using setTimeout.
+	 * This does not represent the actual display refresh rate.
 	 */
 	_measureWithTimeout() {
 		const frameTimes = [];
@@ -110,7 +135,7 @@ class FrameRateHelper {
 			const delta = now - lastTime;
 			frameTimes.push(delta);
 
-			if (frameTimes.length > 60) {
+			if (frameTimes.length >= 60) {
 				this._finalize(frameTimes);
 				return;
 			}
@@ -125,22 +150,55 @@ class FrameRateHelper {
 	/**
 	 * Finalizes frame duration calculation with clamping to ensure stability.
 	 *
-	 * @param {number[]} frameTimes - Array of frame intervals in milliseconds
+	 * @param {number[]} frameTimes - Array of frame intervals in milliseconds.
 	 */
 	_finalize(frameTimes) {
-		const avg = frameTimes.reduce((a, b) => a + b, 0) / frameTimes.length;
-		const clamped = Math.min(Math.max(avg, 1000 / 480), 1000 / 50);
+		const validFrameTimes = frameTimes.filter(
+			value => Number.isFinite(value) && value > 0
+		);
+
+		if (validFrameTimes.length === 0) {
+			return;
+		}
+
+		const sorted = [...validFrameTimes].sort((a, b) => a - b);
+		const middle = Math.floor(sorted.length / 2);
+
+		const estimated = sorted.length % 2 === 0
+			? (sorted[middle - 1] + sorted[middle]) / 2
+			: sorted[middle];
+
+		const clamped = Math.min(
+			Math.max(estimated, 1000 / 480),
+			1000 / 50
+		);
 
 		this.estimatedFrameDuration = clamped;
 		this.ready = true;
+		this._durationsList = {};
 
 		if (this._cache && typeof localStorage !== 'undefined') {
-			localStorage.setItem(this._storageKey, clamped);
+			try {
+				localStorage.setItem(this._storageKey, clamped);
+			} catch (error) {
+				// Ignore storage errors.
+			}
 		}
 
 		const refreshRate = 1000 / clamped;
-		this._callbacks.forEach(cb => cb(refreshRate));
+
+		const callbacks = this._callbacks;
 		this._callbacks = [];
+
+		callbacks.forEach(callback => {
+			try {
+				callback(refreshRate);
+			} catch (error) {
+				setTimeout(() => {
+					throw error;
+				}, 0);
+			}
+		});
 	}
 
 	/**
@@ -150,7 +208,7 @@ class FrameRateHelper {
 	 * @returns {number} Frame duration in milliseconds.
 	 */
 	getDuration(offset = 0) {
-		if(this._durationsList.hasOwnProperty(offset)) {
+		if (Object.prototype.hasOwnProperty.call(this._durationsList, offset)) {
 			return this._durationsList[offset];
 		}
 		
