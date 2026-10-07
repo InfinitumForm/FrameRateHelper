@@ -1,17 +1,19 @@
-# FrameRateHelper.js
+# FrameRateHelper.js - JavaScript Screen Refresh Rate Detector
 
-**FrameRateHelper** is a lightweight, zero-dependency JavaScript utility that calculates the user's display refresh rate and provides a stable, clamped frame duration. It is ideal for synchronizing animations with screen refresh rates to produce smooth, consistent visual experiences.
+**FrameRateHelper** is a lightweight, zero-dependency JavaScript library for detecting screen refresh rates (60Hz, 120Hz, 144Hz and higher) using `requestAnimationFrame`. It provides accurate frame timing and duration calculations for animations, rendering, and other refresh-rate-aware browser applications.
 
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/V7V11XGEKH)
 ---
 
 ## 🚀 Features
 
-- 🔍 Automatically detects true screen refresh rate using `requestAnimationFrame`
-- 🧠 Falls back to `requestIdleCallback` or `setTimeout` when needed
+- 🔍 Detects screen refresh rate using requestAnimationFrame
+- 🖥️ Supports 60Hz, 90Hz, 120Hz, 144Hz, 165Hz and higher refresh rates
+- 🧠 Falls back to requestIdleCallback or setTimeout when needed
 - 🧱 Built-in clamping prevents duration spikes on slow devices or inactive tabs
-- 📦 Offers methods for calculating precise animation timing
-- 📐 Frame-based timing with optional min/max/rounding controls
-- 🪶 Lightweight and dependency-free — pure vanilla JavaScript
+- 📐 Calculates frame duration and frame-based animation timing
+- ⚙️ Optional min/max duration limits and rounding controls
+- 🪶 Lightweight, zero-dependency, pure vanilla JavaScript
 
 ---
 
@@ -22,19 +24,19 @@
 **jsDelivr:**
 ```html
 <!-- Development version (readable, unminified, includes source map) -->
-<script src="https://cdn.jsdelivr.net/gh/InfinitumForm/FrameRateHelper@v1.0.1/dist/FrameRateHelper.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/InfinitumForm/FrameRateHelper@v1.0.2/dist/FrameRateHelper.js"></script>
 
 <!-- Production version (minified, optimized for speed) -->
-<script src="https://cdn.jsdelivr.net/gh/InfinitumForm/FrameRateHelper@v1.0.1/dist/FrameRateHelper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/InfinitumForm/FrameRateHelper@v1.0.2/dist/FrameRateHelper.min.js"></script>
 ```
 
 **unpkg:**
 ```html
 <!-- Development version (readable, unminified, includes source map) -->
-<script src="https://unpkg.com/framerate-helper@1.0.1/dist/FrameRateHelper.js"></script>
+<script src="https://unpkg.com/framerate-helper@1.0.2/dist/FrameRateHelper.js"></script>
 
 <!-- Production version (minified, optimized for speed) -->
-<script src="https://unpkg.com/framerate-helper@1.0.1/dist/FrameRateHelper.min.js"></script>
+<script src="https://unpkg.com/framerate-helper@1.0.2/dist/FrameRateHelper.min.js"></script>
 ```
 
 This exposes `window.FrameRateHelper` globally.
@@ -143,13 +145,14 @@ fps.onReady(() => {
 });
 ```
 
-This is especially useful when animations feel "choppy" on devices with non-standard refresh rates (e.g. 120Hz, 144Hz), ensuring consistent experience across screens.
+FrameRateHelper is especially useful when animations need to behave consistently across displays with different refresh rates, including 60Hz, 120Hz, 144Hz and higher.
 
 
-- Precision animations in sliders, carousels, or onboarding steps
-- Smooth frame-based motion control in games or interactive UIs
-- Avoiding stutters in custom scroll or fade effects
-- Performance-friendly frame sync for canvas/webgl renderers
+- Precision timing for sliders, carousels and UI transitions
+- Frame-based motion control for games and interactive interfaces
+- Refresh-rate-aware scroll, fade and transition effects
+- Frame timing for Canvas and WebGL rendering
+- Consistent animation behavior across standard and high-refresh-rate displays
 
 ---
 
@@ -161,9 +164,10 @@ MIT License — free for personal and commercial use.
 
 ## 👤 Author
 
-Developed by [**INFINITUM FORM®**](https://infinitumform.com)  
 Author: [Ivijan-Stefan Stipić](https://www.linkedin.com/in/ivijanstefanstipic/)  
 © 2025 Ivijan-Stefan Stipić. All rights reserved.
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/V7V11XGEKH)
 
 ---
 

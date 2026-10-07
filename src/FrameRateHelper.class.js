@@ -1,5 +1,5 @@
 /*!
- * FrameRateHelper.js v1.0.1
+ * FrameRateHelper.js v1.0.2
  * Author: Ivijan-Stefan Stipić
  * MIT Licensed | https://github.com/InfinitumForm/FrameRateHelper
  */
@@ -131,6 +131,11 @@ class FrameRateHelper {
 		const avg = frameTimes.reduce((a, b) => a + b, 0) / frameTimes.length;
 		const clamped = Math.min(Math.max(avg, 1000 / 480), 1000 / 50);
 
+<<<<<<< HEAD
+=======
+		// Clamp average to safe range: between 10ms (100Hz) and 20ms (50Hz)
+		const clamped = Math.min(Math.max(avg, 4), 33.34);
+>>>>>>> 62efb8e2f0a5b762a8dbedbfb878cea31c44a0e9
 		this.estimatedFrameDuration = clamped;
 		this.ready = true;
 
