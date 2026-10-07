@@ -4,10 +4,20 @@
  * MIT Licensed | https://github.com/InfinitumForm/FrameRateHelper
  */
 class FrameRateHelper {
-	constructor() {
+	/**
+	 * Initializes the FrameRateHelper instance with optional configuration.
+	 *
+	 * @param {object} [options={}] - Configuration object.
+	 * @param {boolean} [options.cache=false] - If true, enables localStorage caching to avoid repeated calculations.
+	 */
+	constructor(options = {}) {
 		this.estimatedFrameDuration = 1000 / 60; // Default assumption: 60Hz = 16.67ms
 		this.ready = false;
 		this._callbacks = [];
+		this._durationsList = {};
+
+		this._cache = options.cache === true;
+		this._storageKey = 'FrameRateHelper.frameDuration';
 
 		this._init();
 	}
@@ -16,7 +26,19 @@ class FrameRateHelper {
 	 * Starts the detection of the refresh rate using the best available method.
 	 */
 	_init() {
-		// Try requestAnimationFrame if available
+		if (this._cache && typeof localStorage !== 'undefined') {
+			const stored = parseFloat(localStorage.getItem(this._storageKey));
+			if (!isNaN(stored) && stored >= (1000 / 480) && stored <= (1000 / 50)) {
+				this.estimatedFrameDuration = stored;
+				this.ready = true;
+				const refreshRate = 1000 / stored;
+				this._callbacks.forEach(cb => cb(refreshRate));
+				this._callbacks = [];
+				return;
+			}
+		}
+		
+		// Fallback to measurement
 		if (typeof window.requestAnimationFrame === 'function') {
 			this._measureWithRAF();
 		} else if (typeof window.requestIdleCallback === 'function') {
@@ -107,15 +129,16 @@ class FrameRateHelper {
 	 */
 	_finalize(frameTimes) {
 		const avg = frameTimes.reduce((a, b) => a + b, 0) / frameTimes.length;
+		const clamped = Math.min(Math.max(avg, 1000 / 480), 1000 / 50);
 
-		// Clamp average to safe range: between 10ms (100Hz) and 20ms (50Hz)
-		const clamped = Math.min(Math.max(avg, 10), 20);
 		this.estimatedFrameDuration = clamped;
-
 		this.ready = true;
-		const refreshRate = 1000 / clamped;
 
-		// Execute all queued callbacks
+		if (this._cache && typeof localStorage !== 'undefined') {
+			localStorage.setItem(this._storageKey, clamped);
+		}
+
+		const refreshRate = 1000 / clamped;
 		this._callbacks.forEach(cb => cb(refreshRate));
 		this._callbacks = [];
 	}
@@ -127,7 +150,13 @@ class FrameRateHelper {
 	 * @returns {number} Frame duration in milliseconds.
 	 */
 	getDuration(offset = 0) {
-		return this.estimatedFrameDuration + offset;
+		if(this._durationsList.hasOwnProperty(offset)) {
+			return this._durationsList[offset];
+		}
+		
+		this._durationsList[offset] = this.estimatedFrameDuration + offset;
+		
+		return this._durationsList[offset];
 	}
 	
 	/**
